@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web &amp; Full-Stack Development — Tahseen Raza Ansari</title>
+  <meta name="description" content="High-performance web apps, zero-token AI cost collapsers, and asynchronous backend systems built by Tahseen Raza Ansari.">
+  <meta name="theme-color" content="#E8E4E0">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body style="padding-top: 2rem;">
+  <!-- Pull cord -->
+  <div class="cord" id="cord">
+    <canvas class="cord__cv" aria-hidden="true"></canvas>
+    <button class="cord__hit" id="cordHit" role="switch" aria-checked="false" aria-label="Toggle Dark mode"></button>
+  </div>
+
+  <div class="shell" style="padding-bottom: 6rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <a href="../#works" class="room-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>← Back to the doors</span>
+      </a>
+    </div>
+
+    <div class="room-intro">
+      <p class="room-intro__eyebrow">Discipline 01</p>
+      <h1 class="room-intro__h1">Web &amp; Full-Stack Development</h1>
+      <p class="room-intro__desc">
+        Resilient web applications, asynchronous task queues, cost-collapsing AI monitors, and clean UI engineering built from concept to deployment.
+      </p>
+    </div>
+
+    <div class="project-stack">
+      <!-- Project 1: Zero-Token Sentinel (Cost Collapser) -->
+      <article class="project-card">
+        <div class="project-card__info">
+          <div>
+            <p class="project-card__meta">AI Agent Optimization · Full-Stack</p>
+            <h2 class="project-card__title">Zero-Token Sentinel (Cost Collapser)</h2>
+            <p class="project-card__sub">Smart price &amp; web change monitor that doesn't burn LLM tokens</p>
+            <p class="project-card__desc">
+              Traditional AI agents run screenshot capture, vision parsing, and multi-step LLM reasoning on every single polling cycle—burning through dollars in API tokens while waiting for data that hasn't changed. Zero-Token Sentinel monitors with lightweight DOM selectors and only calls expensive AI models when a real structural change is detected.
+            </p>
+            <ul class="project-card__tags">
+              <li>JavaScript</li>
+              <li>Node.js</li>
+              <li>Puppeteer</li>
+              <li>AI Agent Logic</li>
+              <li>Token Optimization</li>
+            </ul>
+          </div>
+          <div class="project-card__links">
+            <a href="https://github.com/tahseencode/Cost-Collapser" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+              <span>View on GitHub</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-card__stage">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <div class="mockup-body">
+              <p><span class="kw">const</span> sentinel = <span class="kw">new</span> <span class="fn">CostCollapser</span>();</p>
+              <p>sentinel.<span class="fn">watch</span>({ target: <span class="str">"#price"</span> });</p>
+              <p class="hl">// 99.4% tokens saved while idle</p>
+              <p>sentinel.<span class="fn">on</span>(<span class="str">"delta"</span>, <span class="kw">async</span> (diff) => {</p>
+              <p>&nbsp;&nbsp;<span class="kw">await</span> agent.<span class="fn">analyzeChange</span>(diff);</p>
+              <p>});</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2: MediKiosk / AyurKiosk -->
+      <article class="project-card flip">
+        <div class="project-card__info">
+          <div>
+            <p class="project-card__meta">Smart India Hackathon SIH26047 · Full-Stack Healthcare</p>
+            <h2 class="project-card__title">MediKiosk / AyurKiosk</h2>
+            <p class="project-card__sub">AI-powered clinical intake platform for Indian OPD &amp; AYUSH hospitals</p>
+            <p class="project-card__desc">
+              Patients complete a multilingual self-intake session at an accessible kiosk; the system instantly synthesizes symptom inputs into structured clinical summaries, flags critical emergencies in real time, and exports standardized ABDM-compliant FHIR health records.
+            </p>
+            <ul class="project-card__tags">
+              <li>Python</li>
+              <li>Flask / REST</li>
+              <li>NLP</li>
+              <li>FHIR &amp; ABDM</li>
+              <li>Healthcare UI</li>
+            </ul>
+          </div>
+          <div class="project-card__links">
+            <a href="https://github.com/tahseencode/Patient-Case-Taking-Software" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+              <span>View on GitHub</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-card__stage">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <div class="mockup-body">
+              <p><span class="kw">POST</span> <span class="str">/api/v1/intake/triage</span></p>
+              <p>{ <span class="hl">"patient"</span>: <span class="str">"OPD-4091"</span>,</p>
+              <p>&nbsp;&nbsp;<span class="hl">"emergency"</span>: <span class="kw">false</span>,</p>
+              <p>&nbsp;&nbsp;<span class="hl">"fhir_record"</span>: <span class="str">"ABDM-IN-2026"</span>,</p>
+              <p>&nbsp;&nbsp;<span class="hl">"summary"</span>: <span class="str">"Migraine + Aura"</span> }</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3: PlanMyPaisa -->
+      <article class="project-card">
+        <div class="project-card__info">
+          <div>
+            <p class="project-card__meta">Async Financial Architecture</p>
+            <h2 class="project-card__title">PlanMyPaisa</h2>
+            <p class="project-card__sub">Asynchronous financial transaction processing engine</p>
+            <p class="project-card__desc">
+              Decoupled Flask REST API with Redis task queues and Celery background workers, ensuring instantaneous front-end responsiveness during multi-stage financial calculations and database commits.
+            </p>
+            <ul class="project-card__tags">
+              <li>Flask</li>
+              <li>Celery</li>
+              <li>Redis</li>
+              <li>React</li>
+              <li>Tailwind CSS</li>
+            </ul>
+          </div>
+          <div class="project-card__links">
+            <a href="https://github.com/tahseencode/PlanMyPaisa" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+              <span>View on GitHub</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-card__stage">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <div class="mockup-body">
+              <p><span class="kw">@celery.task</span></p>
+              <p><span class="kw">def</span> <span class="fn">process_budget_forecast</span>(uid):</p>
+              <p>&nbsp;&nbsp;data = db.<span class="fn">query_history</span>(uid)</p>
+              <p>&nbsp;&nbsp;<span class="hl"># Non-blocking async queue</span></p>
+              <p>&nbsp;&nbsp;<span class="kw">return</span> forecast_engine.<span class="fn">run</span>(data)</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script src="../app.js"></script>
+</body>
+</html>
+

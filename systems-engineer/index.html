@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Systems &amp; C++ — Tahseen Raza Ansari</title>
+  <meta name="description" content="High-performance C++ systems, AST expression engines, and competitive programming by Tahseen Raza Ansari.">
+  <meta name="theme-color" content="#E8E4E0">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body style="padding-top: 2rem;">
+  <!-- Pull cord -->
+  <div class="cord" id="cord">
+    <canvas class="cord__cv" aria-hidden="true"></canvas>
+    <button class="cord__hit" id="cordHit" role="switch" aria-checked="false" aria-label="Toggle Dark mode"></button>
+  </div>
+
+  <div class="shell" style="padding-bottom: 6rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <a href="../#works" class="room-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>← Back to the doors</span>
+      </a>
+    </div>
+
+    <div class="room-intro">
+      <p class="room-intro__eyebrow">Discipline 03</p>
+      <h1 class="room-intro__h1">Systems Engineering &amp; C++ / DSA</h1>
+      <p class="room-intro__desc">
+        Low-latency algorithms, custom AST parsers, competitive programming mastery, and hands-on triage of real production memory leaks and segmentation crashes.
+      </p>
+    </div>
+
+    <div class="project-stack">
+      <!-- Project 1: High-Throughput Hybrid Calculator -->
+      <article class="project-card">
+        <div class="project-card__info">
+          <div>
+            <p class="project-card__meta">C++ Systems &amp; AST Engine</p>
+            <h2 class="project-card__title">HybridCalculator (C++ Expression Engine)</h2>
+            <p class="project-card__sub">Zero-leak abstract syntax tree mathematical evaluation engine</p>
+            <p class="project-card__desc">
+              Engineered in modern C++ to execute complex algebraic, scientific, and logical expressions with deterministic memory profiles. Implements custom lexing, tokenization, shunting-yard AST construction, and stack-based evaluation routines.
+            </p>
+            <ul class="project-card__tags">
+              <li>C++</li>
+              <li>AST Parsing</li>
+              <li>Stack Machine</li>
+              <li>Memory Optimization</li>
+              <li>Deterministic Bounds</li>
+            </ul>
+          </div>
+          <div class="project-card__links">
+            <a href="https://github.com/tahseencode/HybridCalcular" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+              <span>View on GitHub</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-card__stage">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <div class="mockup-body">
+              <p><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></p>
+              <p><span class="kw">class</span> <span class="fn">ASTEvaluator</span> {</p>
+              <p>&nbsp;&nbsp;<span class="kw">std::unique_ptr</span>&lt;Node&gt; root;</p>
+              <p>&nbsp;&nbsp;<span class="kw">double</span> <span class="fn">evaluate</span>() <span class="kw">noexcept</span>;</p>
+              <p>}; <span class="hl">// 0 heap allocations in hot path</span></p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2: CP & Low-Level Bug Triage -->
+      <article class="project-card flip">
+        <div class="project-card__info">
+          <div>
+            <p class="project-card__meta">Competitive Programming &amp; Debugging</p>
+            <h2 class="project-card__title">Competitive Programming &amp; Production Bug Triage</h2>
+            <p class="project-card__sub">Algorithmic mastery across graph theory, dynamic programming &amp; systems triage</p>
+            <p class="project-card__desc">
+              Consistent practice solving hard algorithmic problems on Codeforces and LeetCode in C++. Experienced in triaging real issues like asynchronous loop memory leaks, dangling pointers, and database connection exhaustion.
+            </p>
+            <ul class="project-card__tags">
+              <li>C++ STL</li>
+              <li>Graph Theory</li>
+              <li>Dynamic Programming</li>
+              <li>Valgrind &amp; GDB</li>
+              <li>Memory Safety</li>
+            </ul>
+          </div>
+          <div class="project-card__links">
+            <a href="https://github.com/tahseencode" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+              <span>View GitHub Profile</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-card__stage">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <span class="mockup-dot red"></span>
+              <span class="mockup-dot yellow"></span>
+              <span class="mockup-dot green"></span>
+            </div>
+            <div class="mockup-body">
+              <p><span class="hl">$ valgrind --leak-check=full ./engine</span></p>
+              <p>==4891== HEAP SUMMARY:</p>
+              <p>==4891== in use at exit: 0 bytes</p>
+              <p>==4891== total allocs: 18,204, frees: 18,204</p>
+              <p><span class="str">All heap blocks were freed -- no leaks</span></p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script src="../app.js"></script>
+</body>
+</html>
+
