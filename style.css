@@ -2146,3 +2146,463 @@ html[data-mode="dark"] .story {
   color: var(--muted);
 }
 
+
+
+/* ==========================================================================
+   Full-Screen 3D Holographic Ability Card Modal (Rishi Thakor Style)
+   ========================================================================== */
+
+/* Hero trigger pill */
+.fig__card {
+  position: absolute;
+  left: 50%;
+  bottom: -1.25rem;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 42px;
+  padding: 0 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(26, 24, 24, .82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #F3EEEC;
+  font-family: var(--font);
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  cursor: pointer;
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, .5);
+  transition: transform .35s var(--e-spring), background-color .25s ease, border-color .25s ease;
+  white-space: nowrap;
+}
+
+.fig__card:hover {
+  transform: translateX(-50%) translateY(-2px);
+  background: rgba(26, 24, 24, .95);
+  border-color: rgba(255, 255, 255, .4);
+}
+
+.fig__card svg {
+  width: 1rem;
+  height: 1rem;
+  color: #E8C170;
+}
+
+/* Fullscreen Hologram Modal */
+.holo {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #050404;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .4s ease, visibility 0s linear .4s;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.holo.on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .4s ease;
+}
+
+/* Drifting Golden Embers Canvas */
+.holo__embers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top-Left Watermark */
+.holo .mark {
+  position: absolute;
+  top: max(24px, env(safe-area-inset-top));
+  left: max(28px, env(safe-area-inset-left));
+  margin: 0;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #E8E4E0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.holo .mark small {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: #9E8C78;
+}
+
+/* Top-Right Close Button */
+.holo__x {
+  position: absolute;
+  top: max(1.25rem, env(safe-area-inset-top));
+  right: max(1.25rem, env(safe-area-inset-right));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 42px;
+  padding: 0 1.15rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, .18);
+  background: rgba(20, 18, 18, .65);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #F3EEEC;
+  font-family: var(--font);
+  font-size: .8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.holo__x:hover {
+  background: rgba(45, 40, 40, .85);
+  transform: translateY(-1px);
+}
+
+.holo__x svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Preloader inside Holo */
+.holo__ld {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(60% 48% at 50% 46%, #2a2220 0%, #120f0f 58%, #050404 100%);
+  transition: opacity .5s ease, visibility 0s linear .5s;
+}
+
+.holo__ld.out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.holo__ld.gone {
+  display: none;
+}
+
+.cl {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+  font-family: var(--font);
+  color: #E8E4E0;
+}
+
+.cl__name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .34em;
+  text-indent: .34em;
+  text-transform: uppercase;
+  color: #E8E4E0;
+}
+
+.cl__line {
+  position: relative;
+  width: clamp(180px, 42vw, 260px);
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(232, 228, 224, .14);
+  overflow: hidden;
+}
+
+.cl__line i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a98747, #D6B26E 60%, #efdfb2);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+  transition: transform .2s ease;
+}
+
+.cl__row {
+  display: flex;
+  justify-content: space-between;
+  width: clamp(180px, 42vw, 260px);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(232, 228, 224, .6);
+}
+
+.cl__row b {
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: #D6B26E;
+}
+
+/* Ability Card Stage */
+.holo__lite {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: radial-gradient(60% 48% at 50% 46%, #2a2220 0%, #120f0f 58%, #050404 100%);
+  opacity: 0;
+  transition: opacity .5s ease;
+  padding: 1.5rem;
+}
+
+.holo__lite.in {
+  opacity: 1;
+}
+
+.holo__lite .hc {
+  transform: translateY(20px) scale(.95);
+  transition: transform .8s cubic-bezier(.16, 1, .3, 1);
+}
+
+.holo__lite.in .hc {
+  transform: none;
+}
+
+/* The Card Itself */
+.hc {
+  position: relative;
+  width: min(86vw, calc(78svh * .716), 33rem);
+  aspect-ratio: 1040 / 1452;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  perspective: 1200px;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  --rx: 0deg;
+  --ry: 0deg;
+  --px: 0;
+  --py: 0;
+  --lift: 0;
+}
+
+.hc.grabbing {
+  cursor: grabbing;
+}
+
+/* Warm Ambient Glow behind card */
+.hc__aura {
+  position: absolute;
+  inset: -18% -16%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: calc(.62 + var(--lift) * .38);
+  background: radial-gradient(54% 44% at 50% 44%, rgba(230, 176, 110, .45), rgba(154, 98, 74, .16) 44%, transparent 70%);
+  transition: opacity .3s ease;
+}
+
+.hc__in {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.hc.flip .hc__in {
+  transform: rotateX(var(--rx)) rotateY(calc(180deg + var(--ry)));
+}
+
+.hc.live .hc__in {
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+.hc__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 4.2% / 3%;
+  overflow: hidden;
+  isolation: isolate;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 34px 75px -24px rgba(0, 0, 0, .95), 0 4px 14px -6px rgba(0, 0, 0, .6);
+}
+
+.hc__back {
+  transform: rotateY(180deg);
+}
+
+.hc__plate,
+.hc__backimg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Parallax Portrait Window */
+.hc__win {
+  position: absolute;
+  left: 8.41%;
+  top: 14.8%;
+  width: 83.18%;
+  height: 36.4%;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.hc__win img {
+  position: absolute;
+  left: -8%;
+  top: -8%;
+  width: 116%;
+  height: 116%;
+  display: block;
+  pointer-events: none;
+}
+
+.hc__bg {
+  transform: translate3d(calc(var(--px) * 4.4%), calc(var(--py) * 4.4%), 0) scale(1.02);
+}
+
+.hc__sub {
+  transform: translate3d(calc(var(--px) * 1.8%), calc(var(--py) * 1.8%), 0);
+}
+
+.hc__wsh {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, .45);
+  mix-blend-mode: soft-light;
+  background: linear-gradient(100deg, rgba(255, 236, 206, .16), transparent 42%);
+}
+
+/* Holographic Foil, Specular Gilt Sheen, Glare */
+.hc__foil,
+.hc__sheen,
+.hc__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hc__foil::before,
+.hc__sheen::before,
+.hc__glare::before {
+  content: '';
+  position: absolute;
+  display: block;
+}
+
+.hc__foil {
+  mix-blend-mode: color-dodge;
+  opacity: calc(.2 + var(--lift) * .25);
+  -webkit-mask-image: url(card/body.webp);
+  mask-image: url(card/body.webp);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.hc__foil::before {
+  inset: -15% -80%;
+  transform: translate3d(calc(var(--px) * -24%), 0, 0);
+  background: linear-gradient(112deg, transparent 28%, rgba(255, 104, 170, .45) 40%, rgba(255, 214, 120, .5) 48%, rgba(120, 226, 255, .45) 56%, transparent 68%);
+}
+
+.hc__back .hc__foil {
+  -webkit-mask-image: none;
+  mask-image: none;
+  mix-blend-mode: screen;
+  opacity: calc(.2 + var(--lift) * .22);
+}
+
+.hc__back .hc__foil::before {
+  background: linear-gradient(108deg, transparent 30%, rgba(196, 142, 86, .35) 43%, rgba(255, 221, 166, .45) 50%, rgba(178, 134, 92, .35) 57%, transparent 70%);
+}
+
+.hc__sheen {
+  mix-blend-mode: screen;
+  opacity: calc(.35 + var(--lift) * .35);
+  -webkit-mask-image: url(card/sheen.webp);
+  mask-image: url(card/sheen.webp);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.hc__sheen::before {
+  inset: 0 -100%;
+  transform: translate3d(calc(var(--px) * 26%), 0, 0);
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 243, 212, 1) 49%, rgba(255, 224, 164, .45) 55%, transparent 62%);
+}
+
+.hc__glare {
+  mix-blend-mode: soft-light;
+}
+
+.hc__glare::before {
+  inset: -50%;
+  transform: translate3d(calc(var(--px) * 24%), calc(var(--py) * 22%), 0);
+  background: radial-gradient(22% 18% at 50% 44%, rgba(255, 251, 238, .6), rgba(255, 248, 230, .15) 44%, transparent 72%);
+}
+
+.hc__rim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 226, 170, .32), inset 0 0 26px -6px rgba(0, 0, 0, .6);
+  background: linear-gradient(102deg, rgba(0, 0, 0, .22), transparent 34%, transparent 66%, rgba(0, 0, 0, .26));
+}
+
+/* Bottom Controls Hint */
+.hc__hint {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(232, 228, 224, .65);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .8);
+  white-space: nowrap;
+}
+
+.hc__ht {
+  display: none;
+}
+
+@media (hover: none) {
+  .hc__hm { display: none; }
+  .hc__ht { display: inline; }
+}
