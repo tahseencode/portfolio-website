@@ -191,6 +191,11 @@
 
         <!-- Interactive 3D Ability Card -->
         <div class="hero__stage">
+          <!-- Trigger pill button -->
+          <button class="fig__card" id="holoOpen" aria-haspopup="dialog" aria-controls="holo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>My ability card</span>
+          </button>
           <div class="ability-card" id="abilityCard" role="region" aria-label="Tahseen's Ability Card">
             <div class="ability-card__inner">
               <!-- Card Front -->
@@ -1180,6 +1185,86 @@
       <span>Local time <span class="clock__time" data-time>9:41am</span></span>
       <button class="chip" data-contact>Hire me →</button>
     </div>
+  </div>
+
+  <!-- ============================================================
+       FULLSCREEN HOLOGRAPHIC ABILITY CARD MODAL
+       ============================================================ -->
+  <div id="holo" class="holo" role="dialog" aria-modal="true" aria-label="Tahseen's Holographic Ability Card" hidden>
+
+    <!-- Drifting golden ember particles canvas -->
+    <canvas id="holoEmbers" class="holo__embers" aria-hidden="true"></canvas>
+
+    <!-- Top-left watermark -->
+    <p class="mark" aria-hidden="true">
+      TAHSEEN RAZA ANSARI
+      <small>Ability card</small>
+    </p>
+
+    <!-- Top-right close button -->
+    <button class="holo__x" id="holoClose" aria-label="Close ability card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      <span>Close</span>
+    </button>
+
+    <!-- Progress bar preloader -->
+    <div id="holoLd" class="holo__ld" aria-live="polite">
+      <div class="cl">
+        <p class="cl__name">TAHSEEN RAZA ANSARI</p>
+        <div class="cl__line"><i id="holoBar"></i></div>
+        <p class="cl__row">
+          <span>LOADING THE CARD</span>
+          <b id="holoPct">0%</b>
+        </p>
+      </div>
+    </div>
+
+    <!-- Card stage -->
+    <div id="holoLite" class="holo__lite" aria-hidden="true">
+      <!-- The actual 3-D card -->
+      <button class="hc" id="hc" aria-label="Holographic ability card – click to flip">
+        <div class="hc__aura" aria-hidden="true"></div>
+        <div class="hc__in" id="hcIn">
+
+          <!-- FRONT FACE -->
+          <div class="hc__face hc__front">
+            <!-- Parallax portrait window -->
+            <div class="hc__win">
+              <img class="hc__bg" src="card/win_bg.webp" alt="" draggable="false">
+              <img class="hc__sub" src="card/win_sub.webp" alt="Tahseen Raza Ansari portrait" draggable="false">
+              <div class="hc__wsh" aria-hidden="true"></div>
+            </div>
+            <!-- Gold baroque plate -->
+            <img class="hc__plate" src="card/tahseen_plate.webp" alt="" draggable="false">
+            <!-- Iridescent foil -->
+            <div class="hc__foil" aria-hidden="true"></div>
+            <!-- Specular gilt sheen -->
+            <div class="hc__sheen" aria-hidden="true"></div>
+            <!-- Soft glare -->
+            <div class="hc__glare" aria-hidden="true"></div>
+            <!-- Rim shadow -->
+            <div class="hc__rim" aria-hidden="true"></div>
+          </div>
+
+          <!-- BACK FACE -->
+          <div class="hc__face hc__back">
+            <img class="hc__backimg" src="card/back.webp" alt="" draggable="false">
+            <div class="hc__foil" aria-hidden="true"></div>
+            <div class="hc__sheen" aria-hidden="true"></div>
+            <div class="hc__glare" aria-hidden="true"></div>
+            <div class="hc__rim" aria-hidden="true"></div>
+          </div>
+
+        </div>
+      </button>
+
+      <!-- Bottom hint -->
+      <p class="hc__hint">
+        <span class="hc__hm">HOVER TO TILT · DRAG TO ROTATE · CLICK TO FLIP</span>
+        <span class="hc__ht">TAP TO FLIP · DRAG TO ROTATE</span>
+      </p>
+    </div>
+
   </div>
 
   <!-- Core Script -->

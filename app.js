@@ -378,6 +378,16 @@
         if (count) count.textContent = p + '%';
       }
     }, 40);
+
+    // Failsafe: guarantee loader dismisses after 1.5s
+    setTimeout(() => {
+      if (!loader.classList.contains('done')) {
+        clearInterval(interval);
+        if (fill) fill.style.width = '100%';
+        if (count) count.textContent = '100%';
+        loader.classList.add('done');
+      }
+    }, 1500);
   })();
 
   // --------------------------------------------------------------------------
@@ -849,6 +859,312 @@
           target.scrollIntoView({ behavior: 'smooth' });
         }
       });
+    });
+  })();
+
+  // --------------------------------------------------------------------------
+  // Fullscreen Holographic Baroque Ability Card Modal (Rishi Thakor Style)
+  // --------------------------------------------------------------------------
+  (function initHoloCard() {
+    const holo = document.getElementById('holo');
+    const holoLd = document.getElementById('holoLd');
+    const holoBar = document.getElementById('holoBar');
+    const holoPct = document.getElementById('holoPct');
+    const holoLite = document.getElementById('holoLite');
+    const holoEmbers = document.getElementById('holoEmbers');
+    const holoOpen = document.getElementById('holoOpen');
+    const holoClose = document.getElementById('holoClose');
+    const hcEl = document.getElementById('hc');
+    if (!holo || !hcEl) return;
+
+    let isOpen = false;
+    let isFlipped = false;
+    let rafId = null;
+    let embersRaf = null;
+
+    // Smooth Lerp Spring State
+    let tgRX = 0, tgRY = 0, tgPX = 0, tgPY = 0, tgLift = 0;
+    let crRX = 0, crRY = 0, crPX = 0, crPY = 0, crLift = 0;
+    let swayT = 0;
+
+    // Pointer Drag State
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let baseRY = 0, baseRX = 0;
+
+    // --- 1. Drifting Golden Ember Particles ---
+    const EMBER_COUNT = 45;
+    const embers = [];
+
+    function initEmbers() {
+      if (!holoEmbers) return;
+      const w = (holoEmbers.width = window.innerWidth);
+      const h = (holoEmbers.height = window.innerHeight);
+      embers.length = 0;
+      for (let i = 0; i < EMBER_COUNT; i++) {
+        embers.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 0.6 + Math.random() * 1.8,
+          vy: -(0.3 + Math.random() * 0.6),
+          vx: (Math.random() - 0.5) * 0.35,
+          alpha: 0.15 + Math.random() * 0.65,
+          fade: 0.001 + Math.random() * 0.002,
+          hue: 35 + Math.random() * 15,
+          t: Math.random() * 100
+        });
+      }
+    }
+
+    function renderEmbers() {
+      if (!isOpen || !holoEmbers) return;
+      const ctx = holoEmbers.getContext('2d');
+      const w = holoEmbers.width;
+      const h = holoEmbers.height;
+      ctx.clearRect(0, 0, w, h);
+
+      for (let i = 0; i < embers.length; i++) {
+        const e = embers[i];
+        e.t += 0.02;
+        e.x += e.vx + Math.sin(e.t) * 0.25;
+        e.y += e.vy;
+        e.alpha -= e.fade;
+
+        if (e.y < -10 || e.alpha <= 0) {
+          e.x = Math.random() * w;
+          e.y = h + 6;
+          e.r = 0.6 + Math.random() * 1.8;
+          e.vy = -(0.3 + Math.random() * 0.6);
+          e.alpha = 0.2 + Math.random() * 0.6;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, e.alpha);
+        ctx.fillStyle = `hsl(${e.hue}, 90%, 72%)`;
+        ctx.shadowColor = `hsl(${e.hue}, 100%, 80%)`;
+        ctx.shadowBlur = e.r * 4;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      embersRaf = requestAnimationFrame(renderEmbers);
+    }
+
+    window.addEventListener('resize', () => {
+      if (isOpen && holoEmbers) {
+        holoEmbers.width = window.innerWidth;
+        holoEmbers.height = window.innerHeight;
+      }
+    });
+
+    // --- 2. Card Animation Loop (3D Tilt & Idle Sway) ---
+    function loopCard() {
+      if (!isOpen) return;
+
+      swayT += 0.016;
+      // Idle breathing sway when not dragging/hovering
+      if (tgLift < 0.2 && !isDragging) {
+        tgRY = Math.sin(swayT * 0.7) * 2.2;
+        tgRX = Math.cos(swayT * 0.5) * 1.5;
+      }
+
+      const lp = 0.09;
+      crRX += (tgRX - crRX) * lp;
+      crRY += (tgRY - crRY) * lp;
+      crPX += (tgPX - crPX) * lp;
+      crPY += (tgPY - crPY) * lp;
+      crLift += (tgLift - crLift) * lp;
+
+      hcEl.style.setProperty('--rx', crRX.toFixed(2) + 'deg');
+      hcEl.style.setProperty('--ry', crRY.toFixed(2) + 'deg');
+      hcEl.style.setProperty('--px', crPX.toFixed(3));
+      hcEl.style.setProperty('--py', crPY.toFixed(3));
+      hcEl.style.setProperty('--lift', crLift.toFixed(3));
+
+      rafId = requestAnimationFrame(loopCard);
+    }
+
+    // --- 3. Pointer & Mouse Hover Interactions ---
+    hcEl.addEventListener('pointermove', e => {
+      if (isDragging) return;
+      const rect = hcEl.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
+      tgRY = nx * 22;
+      tgRX = -ny * 18;
+      tgPX = nx * 1.2;
+      tgPY = ny * 1.2;
+      tgLift = 1;
+      hcEl.classList.add('live');
+    });
+
+    hcEl.addEventListener('pointerleave', () => {
+      if (isDragging) return;
+      tgRX = 0;
+      tgRY = 0;
+      tgPX = 0;
+      tgPY = 0;
+      tgLift = 0;
+      hcEl.classList.remove('live');
+    });
+
+    // --- 4. Pointer Drag-to-Rotate ---
+    hcEl.addEventListener('pointerdown', e => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      baseRY = crRY;
+      baseRX = crRX;
+      try { hcEl.setPointerCapture(e.pointerId); } catch (_) {}
+      hcEl.classList.add('grabbing', 'live');
+    });
+
+    window.addEventListener('pointermove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      tgRY = baseRY + dx * 0.42;
+      tgRX = baseRX - dy * 0.28;
+      tgPX = Math.max(-1, Math.min(1, dx / 200));
+      tgPY = Math.max(-1, Math.min(1, dy / 200));
+      tgLift = 1;
+    }, { passive: true });
+
+    window.addEventListener('pointerup', e => {
+      if (!isDragging) return;
+      const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+      isDragging = false;
+      hcEl.classList.remove('grabbing');
+      try { hcEl.releasePointerCapture(e.pointerId); } catch (_) {}
+
+      // Click threshold: if moved < 6px, trigger flip
+      if (dist < 6) {
+        toggleFlip();
+      }
+    });
+
+    // --- 5. Flip Card ---
+    function toggleFlip() {
+      isFlipped = !isFlipped;
+      hcEl.classList.toggle('flip', isFlipped);
+      playClickSound(false);
+    }
+
+    hcEl.addEventListener('dblclick', toggleFlip);
+
+    hcEl.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggleFlip();
+      }
+    });
+
+    // --- 6. Open Modal with Preloader ---
+    function showHolo() {
+      if (isOpen) return;
+      isOpen = true;
+      isFlipped = false;
+      hcEl.classList.remove('flip', 'live', 'grabbing');
+
+      // Reset state
+      crRX = crRY = crPX = crPY = crLift = 0;
+      tgRX = tgRY = tgPX = tgPY = tgLift = 0;
+      hcEl.style.setProperty('--rx', '0deg');
+      hcEl.style.setProperty('--ry', '0deg');
+      hcEl.style.setProperty('--px', '0');
+      hcEl.style.setProperty('--py', '0');
+      hcEl.style.setProperty('--lift', '0');
+
+      // Preloader reset
+      if (holoBar) holoBar.style.setProperty('--p', 0);
+      if (holoPct) holoPct.textContent = '0%';
+      if (holoLd) holoLd.classList.remove('out', 'gone');
+      if (holoLite) holoLite.classList.remove('in');
+
+      // Unhide and show
+      holo.removeAttribute('hidden');
+      holo.classList.add('on');
+      document.body.style.overflow = 'hidden';
+
+      // Start embers
+      initEmbers();
+      cancelAnimationFrame(embersRaf);
+      embersRaf = requestAnimationFrame(renderEmbers);
+
+      // Start card physics loop
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loopCard);
+
+      // Progress bar fill 0% -> 100% over 1.2s
+      const duration = 1200;
+      const startTime = performance.now();
+
+      function stepLd(now) {
+        if (!isOpen) return;
+        const elapsed = now - startTime;
+        const p = Math.min(1, elapsed / duration);
+        const pct = Math.floor(p * 100);
+
+        if (holoBar) holoBar.style.setProperty('--p', p);
+        if (holoPct) holoPct.textContent = pct + '%';
+
+        if (p < 1) {
+          requestAnimationFrame(stepLd);
+        } else {
+          // Preloader complete: fade out loader, reveal card
+          if (holoLd) holoLd.classList.add('out');
+          setTimeout(() => {
+            if (holoLd) holoLd.classList.add('gone');
+            if (holoLite) holoLite.classList.add('in');
+            try { hcEl.focus({ preventScroll: true }); } catch (_) {}
+          }, 400);
+        }
+      }
+      requestAnimationFrame(stepLd);
+    }
+
+    // --- 7. Close Modal ---
+    function hideHolo() {
+      if (!isOpen) return;
+      isOpen = false;
+      holo.classList.remove('on');
+      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(embersRaf);
+      rafId = null;
+      embersRaf = null;
+      document.body.style.overflow = '';
+
+      setTimeout(() => {
+        holo.setAttribute('hidden', '');
+        if (holoLite) holoLite.classList.remove('in');
+        if (holoLd) holoLd.classList.remove('out', 'gone');
+      }, 420);
+    }
+
+    // Triggers
+    if (holoOpen) holoOpen.addEventListener('click', showHolo);
+
+    const heroCard = document.getElementById('abilityCard');
+    if (heroCard) {
+      // Double clicking hero card opens full modal
+      heroCard.addEventListener('dblclick', showHolo);
+    }
+
+    if (holoClose) holoClose.addEventListener('click', hideHolo);
+
+    // Clicking outside card closes modal
+    holo.addEventListener('click', e => {
+      if (e.target === holo || e.target === holoLite) {
+        hideHolo();
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && isOpen) {
+        hideHolo();
+      }
     });
   })();
 
