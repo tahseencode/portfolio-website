@@ -3,8 +3,6 @@
    Design system inspired by therishithakor.com
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 :root {
   --background: #E8E4E0;
   --foreground: #1A1818;
@@ -2441,6 +2439,7 @@ html[data-mode="dark"] .story {
   transform-style: preserve-3d;
   transform: rotateX(var(--rx)) rotateY(var(--ry));
   transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+  will-change: transform;
 }
 
 .hc.flip .hc__in {

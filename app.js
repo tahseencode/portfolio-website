@@ -61,7 +61,8 @@
 
   function setMode(mode, animate = true) {
     const apply = () => {
-      root.dataset.mode = mode;
+      root.setAttribute('data-mode', mode);
+      if (root.dataset) root.dataset.mode = mode;
       if (themeMeta) {
         themeMeta.setAttribute('content', mode === 'dark' ? '#1A1818' : '#E8E4E0');
       }
@@ -80,7 +81,8 @@
   setMode(getMode(), false);
 
   const toggleTheme = () => {
-    const next = root.dataset.mode === 'dark' ? 'light' : 'dark';
+    const currentMode = root.getAttribute('data-mode') || (root.dataset && root.dataset.mode) || 'light';
+    const next = currentMode === 'dark' ? 'light' : 'dark';
     playClickSound(false);
     setMode(next, true);
   };
@@ -260,14 +262,48 @@
       ctx.restore();
     }
 
+    let isSleeping = false;
+    let restFrames = 0;
+    let cordRaf = null;
+
+    function wakeLoop() {
+      if (isSleeping) {
+        isSleeping = false;
+        restFrames = 0;
+        lastT = 0;
+        cordRaf = requestAnimationFrame(loop);
+      }
+    }
+
     function loop(time) {
+      if (isSleeping) return;
       if (!lastT) lastT = time;
       const dt = Math.min((time - lastT) / 1000, 0.033);
       lastT = time;
 
       step(dt);
       draw();
-      requestAnimationFrame(loop);
+
+      // Sleep detection when rope has fully settled
+      if (grab < 0 && Math.abs(ext) < 0.05 && Math.abs(extV) < 0.08) {
+        let totalVel = 0;
+        for (let i = 1; i <= N; i++) {
+          totalVel += Math.abs(pts[i].x - pts[i].px) + Math.abs(pts[i].y - pts[i].py);
+        }
+        if (totalVel < 0.08) {
+          restFrames++;
+          if (restFrames > 30) {
+            isSleeping = true;
+            return;
+          }
+        } else {
+          restFrames = 0;
+        }
+      } else {
+        restFrames = 0;
+      }
+
+      cordRaf = requestAnimationFrame(loop);
     }
 
     const local = e => {
@@ -276,6 +312,7 @@
     };
 
     function startDrag(e) {
+      wakeLoop();
       grab = N;
       const p = local(e), g = pts[N];
       grabOff = { x: p.x - g.x, y: p.y - g.y };
@@ -332,6 +369,7 @@
     }
 
     function tug() {
+      wakeLoop();
       playClickSound(true);
       extV = EXT_MAX * 38;
       pts[N].px = pts[N].x + 2;
@@ -348,9 +386,14 @@
       tug();
     });
 
+    const handleResize = () => {
+      layout();
+      wakeLoop();
+    };
+
     layout();
-    window.addEventListener('resize', layout);
-    requestAnimationFrame(loop);
+    window.addEventListener('resize', handleResize);
+    cordRaf = requestAnimationFrame(loop);
   })();
 
   // --------------------------------------------------------------------------
@@ -683,13 +726,18 @@
     }));
 
     let scrollProgress = 0;
+    let tunnelActive = false;
+    let tunnelRaf = null;
+
     function drawTunnel() {
+      if (!tunnelActive) return;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
 
       const cx = W / 2;
       const cy = H / 2;
-      const isDark = root.dataset.mode === 'dark';
+      const currentMode = root.getAttribute('data-mode') || (root.dataset && root.dataset.mode) || 'light';
+      const isDark = currentMode === 'dark';
       const color = isDark ? 'rgba(232, 228, 224,' : 'rgba(26, 24, 24,';
 
       particles.forEach(p => {
@@ -711,9 +759,24 @@
         ctx.fill();
       });
 
-      requestAnimationFrame(drawTunnel);
+      tunnelRaf = requestAnimationFrame(drawTunnel);
     }
-    requestAnimationFrame(drawTunnel);
+
+    if ('IntersectionObserver' in window) {
+      const ioTunnel = new IntersectionObserver(([entry]) => {
+        tunnelActive = entry.isIntersecting;
+        if (tunnelActive) {
+          cancelAnimationFrame(tunnelRaf);
+          tunnelRaf = requestAnimationFrame(drawTunnel);
+        } else {
+          cancelAnimationFrame(tunnelRaf);
+        }
+      }, { threshold: 0.05 });
+      ioTunnel.observe(sec);
+    } else {
+      tunnelActive = true;
+      tunnelRaf = requestAnimationFrame(drawTunnel);
+    }
 
     // Year Odometer update
     function setOdometerYear(yearStr) {
@@ -1164,6 +1227,21 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && isOpen) {
         hideHolo();
+      }
+    });
+
+    // Pause heavy card and ember rendering when tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+        cancelAnimationFrame(embersRaf);
+        rafId = null;
+        embersRaf = null;
+      } else if (isOpen) {
+        cancelAnimationFrame(rafId);
+        cancelAnimationFrame(embersRaf);
+        rafId = requestAnimationFrame(loopCard);
+        embersRaf = requestAnimationFrame(renderEmbers);
       }
     });
   })();

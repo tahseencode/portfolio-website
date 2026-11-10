@@ -1,0 +1,21 @@
+{
+  "name": "tahseen-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio website of Tahseen Raza Ansari — Software Engineer, AI Developer & Systems Builder",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve .",
+    "build": "echo 'Static assets ready for deployment'"
+  },
+  "keywords": [
+    "portfolio",
+    "developer",
+    "software-engineer",
+    "ai",
+    "computer-vision",
+    "full-stack",
+    "cpp"
+  ],
+  "author": "Tahseen Raza Ansari <tahseencode@gmail.com>",
+  "license": "MIT"
+}

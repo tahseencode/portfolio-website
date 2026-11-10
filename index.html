@@ -24,6 +24,11 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 
@@ -478,10 +483,10 @@
         <div>
           <h3>Engineering Disciplines</h3>
           <ul>
-            <li><a href="javascript:void(0)" onclick="openDoorShowcase(0)">Web &amp; Full-Stack</a></li>
-            <li><a href="javascript:void(0)" onclick="openDoorShowcase(1)">AI &amp; Computer Vision</a></li>
-            <li><a href="javascript:void(0)" onclick="openDoorShowcase(2)">Systems &amp; C++ / DSA</a></li>
-            <li><a href="javascript:void(0)" onclick="openDoorShowcase(3)">Cloud &amp; DevOps</a></li>
+            <li><a href="/web-developer/" onclick="openDoorShowcase(0); return false;">Web &amp; Full-Stack</a></li>
+            <li><a href="/ai-engineer/" onclick="openDoorShowcase(1); return false;">AI &amp; Computer Vision</a></li>
+            <li><a href="/systems-engineer/" onclick="openDoorShowcase(2); return false;">Systems &amp; C++ / DSA</a></li>
+            <li><a href="/cloud-devops/" onclick="openDoorShowcase(3); return false;">Cloud &amp; DevOps</a></li>
           </ul>
         </div>
 
@@ -491,7 +496,7 @@
             <li><a href="#home">Introduction</a></li>
             <li><a href="#works">The Doors</a></li>
             <li><a href="#about">My Journey</a></li>
-            <li><a href="javascript:void(0)" data-contact>Hire Me</a></li>
+            <li><a href="#contact" data-contact>Hire Me</a></li>
           </ul>
         </div>
 
@@ -1230,12 +1235,12 @@
           <div class="hc__face hc__front">
             <!-- Parallax portrait window -->
             <div class="hc__win">
-              <img class="hc__bg" src="card/win_bg.webp" alt="" draggable="false">
-              <img class="hc__sub" src="card/win_sub.webp" alt="Tahseen Raza Ansari portrait" draggable="false">
+              <img class="hc__bg" src="card/win_bg.webp" alt="" width="500" height="300" decoding="async" draggable="false">
+              <img class="hc__sub" src="card/win_sub.webp" alt="Tahseen Raza Ansari portrait" width="360" height="480" decoding="async" draggable="false">
               <div class="hc__wsh" aria-hidden="true"></div>
             </div>
             <!-- Gold baroque plate -->
-            <img class="hc__plate" src="card/tahseen_plate.webp" alt="" draggable="false">
+            <img class="hc__plate" src="card/tahseen_plate.webp" alt="Tahseen Raza Ansari Baroque Ability Card" width="1040" height="1452" decoding="async" draggable="false">
             <!-- Iridescent foil -->
             <div class="hc__foil" aria-hidden="true"></div>
             <!-- Specular gilt sheen -->
@@ -1248,7 +1253,7 @@
 
           <!-- BACK FACE -->
           <div class="hc__face hc__back">
-            <img class="hc__backimg" src="card/back.webp" alt="" draggable="false">
+            <img class="hc__backimg" src="card/back.webp" alt="Ability Card Back" width="1040" height="1452" decoding="async" draggable="false">
             <div class="hc__foil" aria-hidden="true"></div>
             <div class="hc__sheen" aria-hidden="true"></div>
             <div class="hc__glare" aria-hidden="true"></div>
