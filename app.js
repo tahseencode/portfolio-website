@@ -693,119 +693,242 @@
   })();
 
   // --------------------------------------------------------------------------
-  // "Let's Go Back In Time" (Time Machine Tunnel & Year Odometer)
+  // "Let's Go Back In Time" (3D Rotating Concentric Clock Dials Tunnel & Timeline)
   // --------------------------------------------------------------------------
   (function initStory() {
     const sec = document.getElementById('about');
     if (!sec) return;
 
-    const cv = sec.querySelector('.story__bg');
+    const line = sec.querySelector('.story__line');
+    const list = sec.querySelector('.story__list');
+    if (!line || !list) return;
+
+    const chs = [...list.querySelectorAll('.ch')];
+    const N = chs.length;
+    if (N === 0) return;
+
     const cols = [...sec.querySelectorAll('.dg__c')];
-    const whenEl = sec.querySelector('.story__when');
-    const chapters = [...sec.querySelectorAll('.ch')];
+    const when = sec.querySelector('.story__when');
+    const count = sec.querySelector('.story__count');
+    const rail = sec.querySelector('.story__rail');
+    const dtrack = sec.querySelector('.story__dtrack');
+    const cv = sec.querySelector('.story__bg');
     if (!cv) return;
     const ctx = cv.getContext('2d');
+    const root = document.documentElement;
 
-    let W = 0, H = 0, dpr = 1;
-    function resizeCv() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = cv.clientWidth;
-      H = cv.clientHeight;
+    let shownYear = '', shown = -1;
+    function setYear(y) {
+      if (y === shownYear) return;
+      shownYear = y;
+      String(y).split('').forEach((d, k) => {
+        if (cols[k]) cols[k].style.setProperty('--d', d);
+      });
+    }
+
+    function show(i) {
+      if (i === shown) return;
+      shown = i;
+      chs.forEach((c, k) => {
+        c.classList.toggle('active', k === i);
+        c.classList.toggle('on', k === i);
+      });
+      if (chs[i]) {
+        setYear(chs[i].dataset.y || '2026');
+        if (when) when.textContent = chs[i].dataset.when || '';
+        if (count) count.textContent = String(i + 1).padStart(2, '0');
+      }
+      sec.classList.toggle('is-now', i === 0);
+      sec.dataset.ch = i;
+    }
+
+    // ---- 3D Rotating Concentric Clock Dials Tunnel ----
+    let W = 0, H = 0, dpr = 1, rgb = '26,24,24';
+    function size() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = cv.clientWidth || 600;
+      H = cv.clientHeight || 500;
       cv.width = W * dpr;
       cv.height = H * dpr;
     }
-    resizeCv();
-    window.addEventListener('resize', resizeCv);
 
-    // Particle starfield tunnel
-    const particles = Array.from({ length: 45 }, () => ({
-      x: Math.random() * 400 - 200,
-      y: Math.random() * 400 - 200,
-      z: Math.random() * 800 + 50,
-      size: Math.random() * 2 + 1
+    function readRgb() {
+      const mode = root.getAttribute('data-mode') || 'light';
+      rgb = mode === 'dark' ? '232,228,224' : '26,24,24';
+    }
+
+    new MutationObserver(readRgb).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-mode']
+    });
+
+    const RINGS = 16, GAP = 340, FOCAL = 520, R = 620, TICKS = 60;
+    const dust = Array.from({ length: 70 }, () => ({
+      a: Math.random() * Math.PI * 2,
+      r: 120 + Math.random() * 760,
+      z: Math.random() * RINGS * GAP,
+      s: 0.6 + Math.random() * 1.4
     }));
 
-    let scrollProgress = 0;
-    let tunnelActive = false;
-    let tunnelRaf = null;
+    let curP = 0;
+    let animActive = false;
+    let animRaf = null;
+    const startTime = performance.now();
 
-    function drawTunnel() {
-      if (!tunnelActive) return;
+    function renderTunnel(now) {
+      if (!animActive) return;
+      const t = (now - startTime) * 0.001;
+
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
 
-      const cx = W / 2;
-      const cy = H / 2;
-      const currentMode = root.getAttribute('data-mode') || (root.dataset && root.dataset.mode) || 'light';
-      const isDark = currentMode === 'dark';
-      const color = isDark ? 'rgba(232, 228, 224,' : 'rgba(26, 24, 24,';
+      const cx = W * 0.5;
+      const cy = H * 0.55;
+      const k = Math.min(W, H) / 900;
+      const camZ = curP * (N - 1) * GAP * 1.6 + t * 18;
+      const spin = -curP * Math.PI * 1.5 - t * 0.02;
+      const len = RINGS * GAP;
 
-      particles.forEach(p => {
-        p.z -= 1.2 + scrollProgress * 4;
-        if (p.z <= 10) {
-          p.z = 800;
-          p.x = Math.random() * 400 - 200;
-          p.y = Math.random() * 400 - 200;
+      ctx.lineCap = 'round';
+      for (let i = 0; i < RINGS; i++) {
+        const z = ((i * GAP - camZ) % len + len) % len + 60;
+        const s = (FOCAL / z) * k;
+        const fog = Math.min(1, Math.max(0, (z - 260) / 1100)) * Math.max(0, 1 - z / len);
+        if (fog <= 0.01) continue;
+
+        const rr = R * s;
+        const rot = spin + i * 0.21;
+
+        // Concentric dial ring
+        ctx.strokeStyle = `rgba(${rgb},${(fog * 0.12).toFixed(3)})`;
+        ctx.lineWidth = Math.max(0.5, 1.2 * s);
+        ctx.beginPath();
+        ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 60 Clock ticks (12 bold hour marks, 48 minute marks)
+        const T = W < 768 ? 36 : TICKS;
+        const every = T / 12;
+        for (const hour of [false, true]) {
+          const l = (hour ? 46 : 18) * s;
+          ctx.beginPath();
+          for (let j = 0; j < T; j++) {
+            if ((j % every === 0) !== hour) continue;
+            const a = rot + (j / T) * Math.PI * 2;
+            const c = Math.cos(a);
+            const d = Math.sin(a);
+            ctx.moveTo(cx + c * (rr - l), cy + d * (rr - l));
+            ctx.lineTo(cx + c * rr, cy + d * rr);
+          }
+          ctx.strokeStyle = `rgba(${rgb},${(fog * (hour ? 0.3 : 0.14)).toFixed(3)})`;
+          ctx.lineWidth = Math.max(0.5, (hour ? 3 : 1.4) * s);
+          ctx.stroke();
         }
 
-        const k = 220 / p.z;
-        const px = cx + p.x * k;
-        const py = cy + p.y * k;
-        const alpha = Math.min(1, (800 - p.z) / 400) * 0.45;
+        // Single hand on each dial
+        const ha = rot * 3 + i;
+        ctx.strokeStyle = `rgba(${rgb},${(fog * 0.16).toFixed(3)})`;
+        ctx.lineWidth = Math.max(0.5, 2 * s);
+        if (rr < Math.min(W, H) * 0.45) {
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(ha) * rr * 0.55, cy + Math.sin(ha) * rr * 0.55);
+          ctx.stroke();
+        }
+      }
 
-        ctx.fillStyle = `${color} ${alpha})`;
+      // 3D Drifting Dust particles
+      for (const q of dust) {
+        const z = ((q.z - camZ * 1.1) % len + len) % len + 40;
+        const s = (FOCAL / z) * k;
+        const fog = Math.min(1, Math.max(0, (z - 300) / 900)) * Math.max(0, 1 - z / len);
+        const a = q.a + spin * 0.3;
+        ctx.fillStyle = `rgba(${rgb},${(fog * 0.35).toFixed(3)})`;
         ctx.beginPath();
-        ctx.arc(px, py, p.size * k, 0, Math.PI * 2);
+        ctx.arc(
+          cx + Math.cos(a) * q.r * s,
+          cy + Math.sin(a) * q.r * s,
+          Math.max(0.4, q.s * s * 2.2),
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
-      });
+      }
 
-      tunnelRaf = requestAnimationFrame(drawTunnel);
+      animRaf = requestAnimationFrame(renderTunnel);
     }
 
+    // Sticky timeline rail & traveling dot measurement
+    let firstY = 0, lastY = 0, endY = 0;
+    function measure() {
+      if (!chs.length) return;
+      const mark = c => list.offsetTop + c.offsetTop + (c.firstElementChild ? c.firstElementChild.offsetTop : 0) + 8;
+      firstY = mark(chs[0]);
+      lastY = mark(chs[N - 1]);
+      const last = chs[N - 1];
+      endY = list.offsetTop + last.offsetTop + last.offsetHeight;
+      if (rail) {
+        rail.style.setProperty('--r0', firstY + 'px');
+        rail.style.setProperty('--rh', Math.max(0, endY - firstY) + 'px');
+      }
+      if (dtrack) {
+        dtrack.style.setProperty('--r0', firstY + 'px');
+        dtrack.style.setProperty('--rh', Math.max(0, endY - firstY) + 'px');
+      }
+      size();
+    }
+
+    function updateScroll() {
+      const lr = line.getBoundingClientRect();
+      const mid = window.innerHeight * 0.5;
+      const y = Math.min(lastY, Math.max(firstY, mid - lr.top));
+      curP = Math.max(0, Math.min(1, (y - firstY) / Math.max(1, lastY - firstY)));
+
+      sec.style.setProperty('--p', curP.toFixed(4));
+      sec.style.setProperty('--warm', curP.toFixed(3));
+      sec.classList.toggle('at-start', curP < 0.002);
+
+      let activeIdx = 0;
+      for (let k = 0; k < N; k++) {
+        if (lr.top + list.offsetTop + chs[k].offsetTop < mid + 60) {
+          activeIdx = k;
+        }
+      }
+      show(activeIdx);
+    }
+
+    // IntersectionObserver to pause loop when not on screen
     if ('IntersectionObserver' in window) {
-      const ioTunnel = new IntersectionObserver(([entry]) => {
-        tunnelActive = entry.isIntersecting;
-        if (tunnelActive) {
-          cancelAnimationFrame(tunnelRaf);
-          tunnelRaf = requestAnimationFrame(drawTunnel);
+      const io = new IntersectionObserver(([entry]) => {
+        animActive = entry.isIntersecting;
+        if (animActive) {
+          cancelAnimationFrame(animRaf);
+          animRaf = requestAnimationFrame(renderTunnel);
         } else {
-          cancelAnimationFrame(tunnelRaf);
+          cancelAnimationFrame(animRaf);
         }
       }, { threshold: 0.05 });
-      ioTunnel.observe(sec);
+      io.observe(sec);
     } else {
-      tunnelActive = true;
-      tunnelRaf = requestAnimationFrame(drawTunnel);
+      animActive = true;
+      animRaf = requestAnimationFrame(renderTunnel);
     }
 
-    // Year Odometer update
-    function setOdometerYear(yearStr) {
-      yearStr.split('').forEach((digit, i) => {
-        if (cols[i]) {
-          cols[i].style.setProperty('--d', digit);
-        }
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      measure();
+      updateScroll();
+    });
+
+    readRgb();
+    measure();
+    show(0);
+    updateScroll();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        measure();
+        updateScroll();
       });
-    }
-
-    // Observe active chapters on scroll
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            chapters.forEach(c => c.classList.remove('active'));
-            entry.target.classList.add('active');
-
-            const year = entry.target.dataset.y || '2026';
-            const when = entry.target.dataset.when || '';
-            setOdometerYear(year);
-            if (whenEl) whenEl.textContent = when;
-          }
-        });
-      }, {
-        rootMargin: '-30% 0px -50% 0px'
-      });
-
-      chapters.forEach(ch => io.observe(ch));
     }
   })();
 
@@ -1124,6 +1247,234 @@
       }
     });
 
+    // --- Card Burning / Ignition Reveal Effect ---
+    const hcBurn = document.getElementById('hcBurn');
+    let burnRaf = null;
+    const burnSparks = [];
+
+    function playIgniteSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const actx = new AudioContext();
+        if (actx.state === 'suspended') {
+          actx.resume();
+        }
+        const dur = 1.4;
+        const bufSize = Math.floor(actx.sampleRate * dur);
+        const buf = actx.createBuffer(1, bufSize, actx.sampleRate);
+        const data = buf.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99 * b0 + white * 0.05;
+          b1 = 0.96 * b1 + white * 0.11;
+          b2 = 0.86 * b2 + white * 0.25;
+          data[i] = (b0 + b1 + b2) * 0.3;
+        }
+        const src = actx.createBufferSource();
+        src.buffer = buf;
+
+        const flt = actx.createBiquadFilter();
+        flt.type = 'bandpass';
+        flt.frequency.setValueAtTime(220, actx.currentTime);
+        flt.frequency.exponentialRampToValueAtTime(1400, actx.currentTime + 0.5);
+        flt.frequency.exponentialRampToValueAtTime(280, actx.currentTime + dur);
+        flt.Q.setValueAtTime(2.2, actx.currentTime);
+
+        const gain = actx.createGain();
+        gain.gain.setValueAtTime(0.001, actx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.24, actx.currentTime + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
+
+        src.connect(flt);
+        flt.connect(gain);
+        gain.connect(actx.destination);
+
+        src.start();
+        src.stop(actx.currentTime + dur);
+      } catch (_) {}
+    }
+
+    function igniteCard() {
+      if (!hcBurn) return;
+      cancelAnimationFrame(burnRaf);
+      burnSparks.length = 0;
+
+      const rect = hcEl.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(rect.width * dpr);
+      const h = Math.round(rect.height * dpr);
+      if (w <= 0 || h <= 0) return;
+
+      hcBurn.width = w;
+      hcBurn.height = h;
+      hcBurn.style.opacity = '1';
+      hcEl.classList.add('igniting');
+
+      const bCtx = hcBurn.getContext('2d');
+      playIgniteSound();
+
+      const duration = 1350;
+      const startTime = performance.now();
+
+      function flameLineY(x, p, t) {
+        // Diagonal burn from bottom-left (x=0, y=h) to top-right (x=w, y=0)
+        const totalDist = w + h * 0.95;
+        const progDist = p * (totalDist + 140 * dpr) - 50 * dpr;
+        const base = h - (progDist - x) * 0.95;
+        // Organic flame waviness
+        const n1 = Math.sin(x * 0.02 + t * 0.015) * 12 * dpr;
+        const n2 = Math.cos(x * 0.05 - t * 0.022) * 6 * dpr;
+        const n3 = Math.sin(x * 0.09 + t * 0.035) * 3 * dpr;
+        return base + n1 + n2 + n3;
+      }
+
+      function stepBurn(now) {
+        const elapsed = now - startTime;
+        const rawP = Math.min(1, elapsed / duration);
+        // Smoothstep easing
+        const p = rawP * rawP * (3 - 2 * rawP);
+
+        bCtx.clearRect(0, 0, w, h);
+
+        // Generate polygon path along the flame boundary line
+        const step = Math.max(4, Math.floor(6 * dpr));
+        const pts = [];
+        for (let x = 0; x <= w; x += step) {
+          pts.push({ x, y: flameLineY(x, p, now) });
+        }
+        if (pts[pts.length - 1].x < w) {
+          pts.push({ x: w, y: flameLineY(w, p, now) });
+        }
+
+        // 1. Draw charred unburnt ash layer (area above the flame line towards top-right)
+        bCtx.save();
+        bCtx.beginPath();
+        bCtx.moveTo(0, 0);
+        bCtx.lineTo(w, 0);
+        bCtx.lineTo(w, pts[pts.length - 1].y);
+        for (let i = pts.length - 1; i >= 0; i--) {
+          bCtx.lineTo(pts[i].x, pts[i].y);
+        }
+        bCtx.lineTo(0, pts[0].y);
+        bCtx.closePath();
+
+        const charGrad = bCtx.createLinearGradient(0, 0, w, h);
+        charGrad.addColorStop(0, 'rgba(10, 8, 8, 0.99)');
+        charGrad.addColorStop(0.5, 'rgba(16, 12, 10, 0.98)');
+        charGrad.addColorStop(1, 'rgba(25, 14, 10, 0.97)');
+        bCtx.fillStyle = charGrad;
+        bCtx.fill();
+        bCtx.restore();
+
+        // 2. Draw Fiery Multi-Pass Glowing Border along pts
+        if (p < 0.99) {
+          bCtx.save();
+          bCtx.beginPath();
+          bCtx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            bCtx.lineTo(pts[i].x, pts[i].y);
+          }
+
+          // Outer fiery ember halo
+          bCtx.strokeStyle = 'rgba(235, 65, 15, 0.65)';
+          bCtx.lineWidth = 18 * dpr;
+          bCtx.lineCap = 'round';
+          bCtx.lineJoin = 'round';
+          bCtx.shadowColor = '#ff3300';
+          bCtx.shadowBlur = 16 * dpr;
+          bCtx.stroke();
+
+          // Mid molten orange flame
+          bCtx.strokeStyle = 'rgba(255, 140, 25, 0.92)';
+          bCtx.lineWidth = 9 * dpr;
+          bCtx.shadowColor = '#ff9900';
+          bCtx.shadowBlur = 9 * dpr;
+          bCtx.stroke();
+
+          // Core white-hot edge
+          bCtx.strokeStyle = 'rgba(255, 252, 230, 0.98)';
+          bCtx.lineWidth = 3 * dpr;
+          bCtx.shadowColor = '#fff5cf';
+          bCtx.shadowBlur = 4 * dpr;
+          bCtx.stroke();
+          bCtx.restore();
+
+          // 3. Spawn sizzling flying sparks along the flame line
+          const numSparks = Math.floor(Math.random() * 4) + 2;
+          for (let k = 0; k < numSparks; k++) {
+            const pick = pts[Math.floor(Math.random() * pts.length)];
+            if (pick && pick.y > -20 && pick.y < h + 20) {
+              burnSparks.push({
+                x: pick.x,
+                y: pick.y,
+                vx: (Math.random() - 0.4) * 2.8 * dpr,
+                vy: -(Math.random() * 3.5 + 1.5) * dpr,
+                r: (0.8 + Math.random() * 1.8) * dpr,
+                alpha: 1,
+                decay: 0.03 + Math.random() * 0.04,
+                hue: 25 + Math.random() * 25
+              });
+            }
+          }
+
+          // Also burst sparks into outer holoEmbers chamber
+          if (p > 0.08 && p < 0.92 && Math.random() < 0.4 && embers.length) {
+            const cardRect = hcEl.getBoundingClientRect();
+            embers.push({
+              x: cardRect.left + (Math.random() * cardRect.width),
+              y: cardRect.top + (Math.random() * cardRect.height),
+              r: 1.2 + Math.random() * 2.2,
+              vy: -(1.2 + Math.random() * 2.5),
+              vx: (Math.random() - 0.5) * 2,
+              alpha: 0.9,
+              fade: 0.015,
+              hue: 25 + Math.random() * 20,
+              t: Math.random() * 10
+            });
+          }
+        }
+
+        // 4. Update and render burn sparks
+        for (let i = burnSparks.length - 1; i >= 0; i--) {
+          const sp = burnSparks[i];
+          sp.x += sp.vx;
+          sp.y += sp.vy;
+          sp.vy -= 0.05 * dpr;
+          sp.alpha -= sp.decay;
+
+          if (sp.alpha <= 0 || sp.y < -20) {
+            burnSparks.splice(i, 1);
+            continue;
+          }
+
+          bCtx.save();
+          bCtx.globalAlpha = Math.max(0, sp.alpha);
+          bCtx.fillStyle = `hsl(${sp.hue}, 100%, 75%)`;
+          bCtx.shadowColor = `hsl(${sp.hue}, 100%, 80%)`;
+          bCtx.shadowBlur = sp.r * 3;
+          bCtx.beginPath();
+          bCtx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+          bCtx.fill();
+          bCtx.restore();
+        }
+
+        if (rawP < 1 || burnSparks.length > 0) {
+          burnRaf = requestAnimationFrame(stepBurn);
+        } else {
+          // Flame complete: fade out burn canvas to reveal pristine baroque card
+          hcBurn.style.opacity = '0';
+          hcEl.classList.remove('igniting');
+          setTimeout(() => {
+            bCtx.clearRect(0, 0, w, h);
+          }, 450);
+        }
+      }
+
+      burnRaf = requestAnimationFrame(stepBurn);
+    }
+
     // --- 6. Open Modal with Preloader ---
     function showHolo() {
       if (isOpen) return;
@@ -1145,6 +1496,7 @@
       if (holoPct) holoPct.textContent = '0%';
       if (holoLd) holoLd.classList.remove('out', 'gone');
       if (holoLite) holoLite.classList.remove('in');
+      if (hcBurn) hcBurn.style.opacity = '1';
 
       // Unhide and show
       holo.removeAttribute('hidden');
@@ -1176,12 +1528,13 @@
         if (p < 1) {
           requestAnimationFrame(stepLd);
         } else {
-          // Preloader complete: fade out loader, reveal card
+          // Preloader complete: fade out loader, reveal card & ignite burn effect
           if (holoLd) holoLd.classList.add('out');
           setTimeout(() => {
             if (holoLd) holoLd.classList.add('gone');
             if (holoLite) holoLite.classList.add('in');
             try { hcEl.focus({ preventScroll: true }); } catch (_) {}
+            igniteCard();
           }, 400);
         }
       }
@@ -1195,6 +1548,10 @@
       holo.classList.remove('on');
       cancelAnimationFrame(rafId);
       cancelAnimationFrame(embersRaf);
+      cancelAnimationFrame(burnRaf);
+      burnRaf = null;
+      if (hcBurn) hcBurn.style.opacity = '0';
+      hcEl.classList.remove('igniting');
       rafId = null;
       embersRaf = null;
       document.body.style.overflow = '';

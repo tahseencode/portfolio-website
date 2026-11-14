@@ -1564,42 +1564,67 @@ html[data-mode="dark"] .story {
 }
 
 .story__stage {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3.5rem;
   position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 3.5rem;
+  align-items: start;
+  width: 100%;
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 899.98px) {
   .story__stage {
-    grid-template-columns: 340px 1fr;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 }
 
 /* Sticky Time Clock Column */
 .story__clock {
-  position: relative;
+  position: sticky;
+  top: 0;
+  height: 100svh;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 899.98px) {
   .story__clock {
-    position: sticky;
-    top: calc(var(--bar-h) + 3rem);
-    height: fit-content;
+    position: relative;
+    top: auto;
+    height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
   }
 }
 
+/* 3D Concentric Clock Dials Tunnel Canvas */
 .story__bg {
   position: absolute;
-  inset: -20px;
-  width: calc(100% + 40px);
-  height: 260px;
+  left: -40%;
+  right: -40%;
+  top: 0;
+  height: 100%;
+  width: 180%;
+  z-index: -1;
   pointer-events: none;
-  opacity: .4;
-  border-radius: 1.5rem;
+  -webkit-mask: radial-gradient(closest-side, #000 55%, transparent);
+  mask: radial-gradient(closest-side, #000 55%, transparent);
+  opacity: 1;
+}
+
+@media (max-width: 899.98px) {
+  .story__bg {
+    left: -20%;
+    right: -20%;
+    width: 140%;
+    height: 100%;
+    opacity: 0.8;
+  }
 }
 
 .story__eyebrow {
@@ -1611,23 +1636,31 @@ html[data-mode="dark"] .story {
 }
 
 .story__h {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: -.03em;
-  line-height: 1.15;
+  line-height: 1.1;
+  margin-top: .4rem;
+}
+
+@media (min-width: 1024px) {
+  .story__h {
+    font-size: 3.25rem;
+  }
 }
 
 /* Mechanical Year Odometer */
 .story__yr {
   display: flex;
   align-items: center;
-  font-size: 3.5rem;
+  margin: 1rem 0 0 -.04em;
+  font-size: clamp(4.5rem, 9.5vw, 9rem);
   font-weight: 800;
   line-height: 1;
   font-family: var(--font-mono);
-  letter-spacing: -.03em;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
   color: var(--foreground);
-  margin: .5rem 0;
 }
 
 .dg {
@@ -1653,9 +1686,117 @@ html[data-mode="dark"] .story {
 }
 
 .story__when {
-  font-size: .9375rem;
+  margin-top: .8rem;
+  font-family: var(--font-mono);
+  font-size: .875rem;
   font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+
+/* Progress Meter (Winding Clock Icon, Chapter count, Progress Bar) */
+.story__meter {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-top: 1.5rem;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+}
+
+.story__of {
+  color: var(--muted);
+  font-size: .8125rem;
+}
+
+.story__rw {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--accent);
+  transform: rotate(calc(var(--p, 0) * -720deg));
+  transition: transform .05s linear;
+}
+
+.story__bar {
+  position: relative;
+  flex: 0 1 11rem;
+  height: 2px;
+  margin-left: .6rem;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.story__bar b {
+  position: absolute;
+  inset: 0;
+  background: var(--foreground);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+}
+
+/* Timeline Track, Rail & Sticky Travelling Dot */
+.story__line {
+  position: relative;
+  padding-top: 18vh;
+  padding-bottom: 12vh;
+}
+
+@media (max-width: 899.98px) {
+  .story__line {
+    padding-top: 1rem;
+    padding-bottom: 4vh;
+  }
+}
+
+.story__rail {
+  position: absolute;
+  left: .45rem;
+  top: var(--r0, 0px);
+  height: var(--rh, 100%);
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.story__dtrack {
+  position: absolute;
+  left: calc(.45rem + 1px - 1.25rem);
+  width: 2.5rem;
+  top: calc(var(--r0, 0px) - 1rem);
+  height: calc(var(--rh, 100%) + 2rem);
+  padding: .45rem 0;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.story__dot {
+  position: sticky;
+  display: block;
+  top: calc(50svh - .55rem);
+  margin: 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  z-index: 3;
+  background: var(--foreground);
+  box-shadow: 0 0 0 .4rem rgba(0, 0, 0, .08);
+  transition: background .3s, box-shadow .3s;
+}
+
+html[data-mode="dark"] .story__dot {
+  box-shadow: 0 0 0 .4rem rgba(255, 255, 255, .1);
+}
+
+.story.is-now .story__dot {
+  background: #7FB069;
+  box-shadow: 0 0 0 .45rem rgba(127, 176, 105, .28);
 }
 
 /* Chronological Chapter List */
@@ -1663,10 +1804,10 @@ html[data-mode="dark"] .story {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 5rem;
   position: relative;
-  border-left: 2px solid var(--line);
-  padding-left: 2rem;
+  margin: 0;
+  padding: 0 0 0 2.75rem;
 }
 
 @media (min-width: 768px) {
@@ -1679,31 +1820,15 @@ html[data-mode="dark"] .story {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .6rem;
+  opacity: .35;
+  transform: translateY(12px);
+  transition: opacity .4s ease, transform .4s ease;
 }
 
-.ch::before {
-  content: "";
-  position: absolute;
-  left: calc(-2rem - 6px);
-  top: .35rem;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--foreground);
-  border: 3px solid var(--background);
-  transition: background-color .3s ease, transform .3s ease;
-}
-
-@media (min-width: 768px) {
-  .ch::before {
-    left: calc(-3.5rem - 6px);
-  }
-}
-
-.ch.active::before {
-  background: #E8C170;
-  transform: scale(1.4);
+.ch.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .ch__date {
@@ -1717,6 +1842,13 @@ html[data-mode="dark"] .story {
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -.02em;
+  line-height: 1.25;
+}
+
+@media (min-width: 1280px) {
+  .ch__t {
+    font-size: 1.85rem;
+  }
 }
 
 .ch__org {
@@ -2589,6 +2721,30 @@ html[data-mode="dark"] .story {
   border-radius: inherit;
   box-shadow: inset 0 0 0 1px rgba(255, 226, 170, .32), inset 0 0 26px -6px rgba(0, 0, 0, .6);
   background: linear-gradient(102deg, rgba(0, 0, 0, .22), transparent 34%, transparent 66%, rgba(0, 0, 0, .26));
+}
+
+/* Fiery Ignition / Burn Reveal Canvas */
+.hc__burn {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity .4s ease;
+}
+
+/* Igniting state aura boost */
+.hc.igniting .hc__aura {
+  opacity: 1 !important;
+  background: radial-gradient(54% 44% at 50% 44%, rgba(255, 140, 40, .85), rgba(200, 60, 20, .45) 44%, transparent 70%) !important;
+  animation: auraPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes auraPulse {
+  0% { transform: scale(1); filter: blur(35px); }
+  100% { transform: scale(1.12); filter: blur(50px); }
 }
 
 /* Bottom Controls Hint */

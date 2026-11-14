@@ -173,9 +173,6 @@
             <span class="chip">🎓 B.Tech IT @ KGEC</span>
             <span class="chip">⚡ Competitive Programmer</span>
             <span class="chip">🌐 Open Source Builder</span>
-            <span class="chip">SIH '26 participant</span>
-             <span class="chip">Actively participation in hackathons</span>
-
           </div>
 
           <div class="hero__cta">
@@ -308,7 +305,7 @@
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 13l4 4L19 7" />
                       </svg>
-                      <span><strong>SIH 2026 Participation:</strong> AI-powered criminal intelligence &amp; ABDM-compliant
+                      <span><strong>SIH 2026 Finalist:</strong> AI-powered criminal intelligence &amp; ABDM-compliant
                         health kiosks.</span>
                     </li>
                     <li>
@@ -445,10 +442,19 @@
           </div>
 
           <p class="story__when">2026 — Present</p>
+
+          <div class="story__meter" aria-hidden="true">
+            <svg aria-hidden="true" focusable="false" class="story__rw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
+            <span class="story__count">01</span><span class="story__of">/ 04</span>
+            <i class="story__bar"><b></b></i>
+          </div>
         </div>
 
-        <!-- Chronological Milestone Chapters -->
-        <ol class="story__list">
+        <!-- Chronological Milestone Chapters with Traveling Circle Dot and Rail -->
+        <div class="story__line">
+          <span class="story__rail" aria-hidden="true"></span>
+          <span class="story__dtrack" aria-hidden="true"><span class="story__dot"></span></span>
+          <ol class="story__list">
           <li class="ch active" data-y="2026" data-when="2026 — Present">
             <p class="ch__date">2026 — Present</p>
             <h3 class="ch__t">B.Tech IT @ KGEC &amp; Full-Stack AI Engineer</h3>
@@ -507,6 +513,7 @@
             </ul>
           </li>
         </ol>
+        </div>
       </div>
     </section>
   </main>
@@ -1312,7 +1319,8 @@
       <div class="msuccess" id="mSuccess" hidden>
         <h3>Ready to send!</h3>
         <p>Your default mail client has opened with your message ready to go. You can also contact me directly at
-          <strong>tahseencode@gmail.com</strong>.</p>
+          <strong>tahseencode@gmail.com</strong>.
+        </p>
         <button class="btn-primary" id="mDone">Back to website</button>
       </div>
     </div>
@@ -1415,6 +1423,8 @@
             <div class="hc__glare" aria-hidden="true"></div>
             <!-- Rim shadow -->
             <div class="hc__rim" aria-hidden="true"></div>
+            <!-- Fiery ignition / burn reveal effect -->
+            <canvas class="hc__burn" id="hcBurn" aria-hidden="true"></canvas>
           </div>
 
           <!-- BACK FACE -->
