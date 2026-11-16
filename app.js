@@ -41,7 +41,7 @@
         osc.start(now);
         osc.stop(now + 0.03);
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   // --------------------------------------------------------------------------
@@ -55,7 +55,7 @@
     try {
       const saved = localStorage.getItem(THEME_KEY);
       if (saved) return saved;
-    } catch (_) {}
+    } catch (_) { }
     return 'light';
   }
 
@@ -68,7 +68,7 @@
       }
       try {
         localStorage.setItem(THEME_KEY, mode);
-      } catch (_) {}
+      } catch (_) { }
     };
 
     if (animate && document.startViewTransition) {
@@ -377,7 +377,7 @@
 
     hit.addEventListener('pointerdown', e => {
       e.preventDefault();
-      try { hit.setPointerCapture(e.pointerId); } catch (_) {}
+      try { hit.setPointerCapture(e.pointerId); } catch (_) { }
       startDrag(e);
     });
 
@@ -654,7 +654,7 @@
     });
 
     // Global function to open a door room showcase
-    window.openDoorShowcase = function(doorIdx) {
+    window.openDoorShowcase = function (doorIdx) {
       playClickSound(false);
       units.forEach((u, i) => {
         u.classList.toggle('opened', i === doorIdx);
@@ -670,7 +670,7 @@
     };
 
     // Close showcase
-    window.closeDoorShowcase = function(doorIdx) {
+    window.closeDoorShowcase = function (doorIdx) {
       const showcase = document.getElementById(`showcase-${doorIdx}`);
       if (showcase) {
         showcase.classList.remove('active');
@@ -946,7 +946,7 @@
 
     if (!modal) return;
 
-    window.openContactModal = function(serviceType = '') {
+    window.openContactModal = function (serviceType = '') {
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
       if (formBox) formBox.hidden = false;
@@ -962,7 +962,7 @@
       }, 150);
     };
 
-    window.closeContactModal = function() {
+    window.closeContactModal = function () {
       modal.classList.remove('open');
       document.body.style.overflow = '';
     };
@@ -1203,7 +1203,7 @@
       startY = e.clientY;
       baseRY = crRY;
       baseRX = crRX;
-      try { hcEl.setPointerCapture(e.pointerId); } catch (_) {}
+      try { hcEl.setPointerCapture(e.pointerId); } catch (_) { }
       hcEl.classList.add('grabbing', 'live');
     });
 
@@ -1223,7 +1223,7 @@
       const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
       isDragging = false;
       hcEl.classList.remove('grabbing');
-      try { hcEl.releasePointerCapture(e.pointerId); } catch (_) {}
+      try { hcEl.releasePointerCapture(e.pointerId); } catch (_) { }
 
       // Click threshold: if moved < 6px, trigger flip
       if (dist < 6) {
@@ -1293,7 +1293,7 @@
 
         src.start();
         src.stop(actx.currentTime + dur);
-      } catch (_) {}
+      } catch (_) { }
     }
 
     function igniteCard() {
@@ -1533,7 +1533,7 @@
           setTimeout(() => {
             if (holoLd) holoLd.classList.add('gone');
             if (holoLite) holoLite.classList.add('in');
-            try { hcEl.focus({ preventScroll: true }); } catch (_) {}
+            try { hcEl.focus({ preventScroll: true }); } catch (_) { }
             igniteCard();
           }, 400);
         }

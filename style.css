@@ -2767,3 +2767,13 @@ html[data-mode="dark"] .story__dot {
   .hc__hm { display: none; }
   .hc__ht { display: inline; }
 }
+
+/* Respect users who ask the OS for less motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

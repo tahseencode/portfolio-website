@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Portfolio website of Tahseen Raza Ansari — Software Engineer, AI Developer & Systems Builder",
   "scripts": {
-    "start": "serve .",
-    "dev": "serve .",
+    "start": "npx serve .",
+    "dev": "npx serve .",
     "build": "echo 'Static assets ready for deployment'"
   },
   "keywords": [
@@ -19,4 +19,3 @@
   "author": "Tahseen Raza Ansari <tahseencode@gmail.com>",
   "license": "MIT"
 }
-
