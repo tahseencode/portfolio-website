@@ -46,8 +46,6 @@ Hey, I'm **Tahseen Raza Ansari**, a B.Tech IT student who builds across full-sta
 
 Most portfolios are a flat list of projects. I wanted mine to feel more like a small world you can poke around in. So you can **pull a cord** to change the theme, **flip through** the hero calendar, **open a door** to step into a skill's room, and **ride a time machine** back through the timeline.
 
-The design takes inspiration from [therishithakor.com](https://therishithakor.com/), rebuilt from scratch with its own interactions, content, and visual language.
-
 > 💡 **The idea in one line:** every skill gets its own door, and every door leads to real work.
 
 ### 🗺️ How the tour flows
